@@ -1,6 +1,11 @@
 {
   "pages": [
     {
+      "name": "Subscription",
+      "icon": "mdi-chart-donut",
+      "url": "/Subscription/"
+    },
+    {
       "name": "Dashboard CRM",
       "icon": "mdi-chart-donut",
       "url": "/Dashboards/CRM"
