@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\audio\" />
-    <Folder Include="wwwroot\img\" />
     <Folder Include="wwwroot\vendor\" />
   </ItemGroup>
 
