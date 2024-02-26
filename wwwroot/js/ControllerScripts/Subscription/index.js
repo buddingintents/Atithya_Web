@@ -270,10 +270,11 @@ $(function () {
             {
               extend: 'pdf',
               text: '<i class="mdi mdi-file-pdf-box me-1"></i>Pdf',
-              className: 'dropdown-item',
-              exportOptions: {
-                columns: [2, 3, 4, 5]
-              }
+              orientation: 'landscape',
+              className: 'dropdown-item'//,
+              //exportOptions: {
+              //  columns: [2, 3, 4, 5]
+              //}
             },
             {
               extend: 'copy',
@@ -285,10 +286,111 @@ $(function () {
             }
           ]
         }
-      ]
+      ],
+      // For responsive popup
+      responsive: {
+        details: {
+          display: $.fn.dataTable.Responsive.display.modal({
+            header: function (row) {
+              var data = row.data();
+              return 'Details of ' + data['sub_status'];
+            }
+          }),
+          type: 'column',
+          renderer: function (api, rowIdx, columns) {
+            var data = $.map(columns, function (col, i) {
+              return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+                ? '<tr data-dt-row="' +
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
+                : '';
+            }).join('');
+
+            return data ? $('<table class="table"/><tbody />').append(data) : false;
+          }
+        }
+      },
+      initComplete: function () {
+        // Adding role filter once table initialized
+        this.api()
+          .columns(2)
+          .every(function () {
+            var column = this;
+            var select = $(
+              '<select id="FilterSubscriptionStatus" class="form-select text-capitalize"><option value="">Subscription Status</option></select>'
+            )
+              .appendTo('.subscription_status')
+              .on('change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                column.search(val ? '^' + val + '$' : '', true, false).draw();
+              });
+
+            column
+              .data()
+              .unique()
+              .sort()
+              .each(function (d, j) {
+                select.append('<option value="' + d + '">' + d + '</option>');
+              });
+          });
+        // Adding plan filter once table initialized
+        this.api()
+          .columns(7)
+          .every(function () {
+            var column = this;
+            var select = $(
+              '<select id="FilterDiscountType" class="form-select text-capitalize"><option value="">Discount Type</option></select>'
+            )
+              .appendTo('.discount_type')
+              .on('change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                column.search(val ? '^' + val + '$' : '', true, false).draw();
+              });
+
+            column
+              .data()
+              .unique()
+              .sort()
+              .each(function (d, j) {
+                select.append('<option value="' + d + '">' + d + '</option>');
+              });
+          });
+        // Adding status filter once table initialized
+        this.api()
+          .columns(5)
+          .every(function () {
+            var column = this;
+            var select = $(
+              '<select id="FilterSubType" class="form-select text-capitalize"><option value="">Subscription Type</option></select>'
+            )
+              .appendTo('.subscription_type')
+              .on('change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                column.search(val ? '^' + val + '$' : '', true, false).draw();
+              });
+
+            column
+              .data()
+              .unique()
+              .sort()
+              .each(function (d, j) {
+                select.append('<option value="' + d + '">' + d + '</option>');
+              });
+          });
+      }
     });
     $('.add-new').html(
-      "<button class='btn btn-primary waves-effect waves-light' data-bs-toggle='offcanvas' data-bs-target='#offcanvasAddUser'><i class='mdi mdi-plus me-0 me-sm-1'></i><span class= 'd-none d-sm-inline-block'> Add New Subscription </span ></button>"
+      "<button class='btn btn-primary waves-effect waves-light' data-bs-toggle='offcanvas' data-bs-target='#offcanvasAddSubscription'><i class='mdi mdi-plus me-0 me-sm-1'></i><span class= 'd-none d-sm-inline-block'> Add New Subscription </span ></button>"
     );
   }
 
@@ -302,6 +404,15 @@ $(function () {
     $('.dataTables_filter .form-control').removeClass('form-control-sm');
     $('.dataTables_length .form-select').removeClass('form-select-sm');
   }, 300);
+
+  $("#Ankit").text(count);
+  dt_user.on('search.dt', function () {
+    var count = dt_user.rows({ search: 'applied' }).count();
+    console.log(dt_user.page.info());
+    $("#Ankit").text(count);
+    console.log(count);
+  });
+
 });
 
 // Validation & Phone mask
@@ -356,3 +467,116 @@ $(function () {
     }
   });
 })();
+
+function a() {
+  try {
+    var data = {
+      'Configuration': 'a',
+      'Content': 'a'
+    };
+    Common.Fetch('POST', 'Subscription/GetSubscriptionData', data, prepData);
+
+    //$.post("Subscription/GetSubscriptionData", data,
+    //  function (data, status) {
+    //    alert("Data: " + data + "\nStatus: " + status);
+    //  });
+  } catch (e) {
+    console.log(e);
+  }
+}
+function prepData(data, perpetualCallback) {
+  if (data) {
+    console.log(data);
+    data.responseConfig = JSON.parse(decompressString(data.responseConfig));
+    if (data.responseConfig.status == "200") {
+      if (data.responseConfig.response_compression == "1")
+        data = JSON.parse(decompressString(data.content));
+      else
+        data = JSON.parse(data.content);
+      var my_columns = [];
+
+      $.each(data[0], function (key, value) {
+        var my_item = {};
+        my_item.data = key;
+        my_item.title = key;
+        my_columns.push(my_item);
+      });
+      perpetualCallback(my_columns, data);
+    }
+    else {
+      var respStatus;
+      if (data.responseConfig.response_compression == "1")
+        respStatus = decompressString(data.content)
+      else
+        respStatus = data.content;
+      PNotify.error({
+        title: data.responseConfig.status + " : " + data.responseConfig.description,
+        text: respStatus,
+        hide: true
+      });
+    }
+  }
+  else {
+    PNotify.error({
+      title: "No data received",
+      text: "Please try again!!!",
+      hide: true
+    });
+  }
+}
+function init_DataTables(my_columns, data) {
+  if (typeof ($.fn.DataTable) === 'undefined') { return; }
+  if ($("#datatable").length) {
+    var footerCols = "<tr>";
+    for (i = 0; i < my_columns.length; i++) {
+      footerCols = footerCols + '<th></th>';
+    }
+    $("#datatable tfoot").append(footerCols + "</tr>");
+    $("#datatable").DataTable({
+      dom: "<'col-md-4 text-left'l><'col-md-4 text-center'B><'col-md-4 text-right'f>" +
+        "<'col-sm-12 text-center'tr>" +
+        "<'col-sm-5 text-left'i><'col-sm-7 text-right'p>",//'<lf<t>Bip>',    //"Blfrtip",
+      columns: my_columns,
+      data: data,
+      buttons: [
+        {
+          extend: 'copyHtml5',
+          text: '<i class="fa fa-files-o"></i>',
+          titleAttr: 'Copy',
+          className: 'btn btn-primary btn-xs'
+        },
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fa fa-file-excel-o"></i>',
+          titleAttr: 'Excel',
+          autoFilter: true,
+          sheetName: 'iAlert-GranularData',
+          className: 'btn btn-primary btn-xs'
+        },
+        {
+          extend: 'pdfHtml5',
+          messageTop: 'Data exported from ATM iAlerts web portal. Please follow data confidentiality policy of the Bank',
+          orientation: 'landscape',
+          pageSize: 'A4',
+          text: '<i class="fa fa-file-pdf-o"></i>',
+          className: 'btn btn-primary btn-xs',
+          titleAttr: 'PDF'
+        },
+        {
+          extend: 'print',
+          messageTop: 'Data exported from ATM iAlerts web portal. Please follow data confidentiality policy of the Bank',
+          text: '<i class="fa fa-print"></i>',
+          titleAttr: 'Copy',
+          className: 'btn btn-primary btn-xs'
+        },
+      ],
+      responsive: false,
+      keys: true,
+      scrollX: true,
+      deferRender: true,
+      fixedHeader: true,
+      pageLength: 25,
+      destroy: true
+    });
+  }
+}
