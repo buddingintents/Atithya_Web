@@ -1,0 +1,227 @@
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_ContentNavbarLayout.cshtml";
+}
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/vendor/libs/datatables-bs5/datatables.bootstrap5.dist.css">
+    <link rel="stylesheet" href="~/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.dist.css">
+    <link rel="stylesheet" href="~/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.dist.css">
+    <link rel="stylesheet" href="~/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.dist.css">
+    <link rel="stylesheet" href="~/vendor/libs/select2/select2.dist.css" />
+    <link rel="stylesheet" href="~/vendor/libs/&#64;form-validation/umd/styles/index.min.css" />
+}
+
+@section VendorScripts {
+    <script src="~/vendor/libs/moment/moment.dist.js"></script>
+    <script src="~/vendor/libs/datatables-bs5/datatables-bootstrap5.dist.js"></script>
+    <script src="~/vendor/libs/select2/select2.dist.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/umd/bundle/popular.min.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/umd/plugin-bootstrap5/index.min.js"></script>
+    <script src="~/vendor/libs/&#64;form-validation/umd/plugin-auto-focus/index.min.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave.dist.js"></script>
+    <script src="~/vendor/libs/cleavejs/cleave-phone.dist.js"></script>
+}
+
+@section PageScripts {
+    <script src="~/js/controllerscripts/property/property.js" asp-append-version="true"></script>
+}
+
+@* ************** Content ************** *@
+<div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div class="me-1">
+                        <p class="text-heading mb-2">Property</p>
+                        <div class="d-flex align-items-center">
+                            <h4 class="mb-2 me-1 display-6">21,459 <span id="Ankit1"></span></h4>
+                            <p class="text-success mb-2">(+29%)</p>
+                        </div>
+                        <p class="mb-0">Total Properties</p>
+                    </div>
+                    <div class="avatar">
+                        <div class="avatar-initial bg-label-primary rounded">
+                            <div class="mdi mdi-account-outline mdi-24px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div class="me-1">
+                        <p class="text-heading mb-2">Total Revenue</p>
+                        <div class="d-flex align-items-center">
+                            <h4 class="mb-2 me-1 display-6">4,567</h4>
+                            <p class="text-success mb-2">(+18%)</p>
+                        </div>
+                        <p class="mb-0">Last week analytics</p>
+                    </div>
+                    <div class="avatar">
+                        <div class="avatar-initial bg-label-danger rounded">
+                            <div class="mdi mdi-account-plus-outline mdi-24px scaleX-n1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div class="me-1">
+                        <p class="text-heading mb-2">Active Users</p>
+                        <div class="d-flex align-items-center">
+                            <h4 class="mb-2 me-1 display-6">19,860</h4>
+                            <p class="text-danger mb-2">(-14%)</p>
+                        </div>
+                        <p class="mb-0">Last week analytics</p>
+                    </div>
+                    <div class="avatar">
+                        <div class="avatar-initial bg-label-success rounded">
+                            <div class="mdi mdi-account-check-outline mdi-24px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div class="me-1">
+                        <p class="text-heading mb-2">Pending Users</p>
+                        <div class="d-flex align-items-center">
+                            <h4 class="mb-2 me-1 display-6">237</h4>
+                            <p class="text-success mb-2">(+42%)</p>
+                        </div>
+                        <p class="mb-0">Last week analytics</p>
+                    </div>
+                    <div class="avatar">
+                        <div class="avatar-initial bg-label-warning rounded">
+                            <div class="mdi mdi-account-search mdi-24px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Users List Table -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Property List</h5>
+        <div class="d-flex justify-content-between align-items-center row py-3 gap-3 gap-md-0">
+            <div class="col-md-4 user_status"></div>
+            <div class="col-md-4 user_type"></div>
+            <div class="col-md-4 property_type"></div>
+        </div>
+    </div>
+    <div class="card-datatable table-responsive">
+        <table class="datatables-users-details table">
+            <thead class="border-top table-light">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Property ID</th>
+                    <th>Subscription ID</th>
+                    <th>Owner</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>District</th>
+                    <th>State</th>
+                    <th>Country</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                    <th>GSTN</th>
+                    <th>Rooms</th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- Offcanvas to add new user -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddSubscription" aria-labelledby="offcanvasAddUserLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Add User</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body mx-0 flex-grow-0 h-100">
+            <form class="add-new-subscription pt-0" id="addNewPropertyForm" onsubmit="return false">
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_name" placeholder="Marierer" name="property_name"
+                           aria-label="a" />
+                    <label for="property_name">Property Name</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_owner" placeholder="Parker" name="property_owner"
+                           aria-label="a" />
+                    <label for="property_owner">Property Owner</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_address" placeholder="xyz street" name="property_address"
+                           aria-label="a" />
+                    <label for="property_address">Address</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_city" placeholder="Lucknow" name="property_city"
+                           aria-label="a" />
+                    <label for="property_city">City</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_state" placeholder="Uttar Pradesh" name="property_state"
+                           aria-label="a" />
+                    <label for="property_state">State</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_country" placeholder="India" name="user_pan"
+                           aria-label="a" />
+                    <label for="property_country">Country</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_contact1" placeholder="8795034856" name="property_contact1"
+                           aria-label="a" />
+                    <label for="property_contact1">Contact 1</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_contact2" placeholder="345677057" name="property_contact2"
+                           aria-label="a" />
+                    <label for="property_contact2">Contact 2</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_email" placeholder="xyz23@gmail.com" name="property_email"
+                           aria-label="a" />
+                    <label for="property_email">Email</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_admin" placeholder="Muk" name="property_admin"
+                           aria-label="a" />
+                    <label for="property_admin">Property Admin</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_gstn" placeholder="2KLN4374897389287" name="property_gstn"
+                           aria-label="a" />
+                    <label for="property_gstn">GSTN</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-4">
+                    <input type="text" class="form-control" id="property_rooms" placeholder="236" name="property_rooms"
+                           aria-label="a" />
+                    <label for="property_rooms">Rooms</label>
+                </div>
+               
+                <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Submit</button>
+                <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+
