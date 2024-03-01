@@ -2,6 +2,9 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net;
 using System.Text;
+using Atithya_Web.Utilities;
+using System.Configuration;
+using System.Net.Http;
 
 namespace Atithya_Web.Helpers
 {
@@ -13,17 +16,20 @@ namespace Atithya_Web.Helpers
     private readonly string _baseUrl = "https://localhost:7143/api/";
     private const string ClientUserAgent = "my-api-client-v1";
     private const string MediaTypeJson = "application/json";
+    private readonly string tokenData = string.Empty;
 
-    public ApiHelper(TimeSpan? timeout = null)
+    public ApiHelper(TimeSpan? timeout = null, string? token = null)
     {
       _timeout = timeout ?? TimeSpan.FromSeconds(30);
+      tokenData = token ?? string.Empty;
     }
-    public async Task<string> GetAsync(string url)
+    public async Task<string> GetAsync(string url, string token)
     {
       try
       {
         EnsureHttpClientCreated();
         _httpClient.DefaultRequestHeaders.Clear();
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         HttpResponseMessage response = await _httpClient.GetAsync(NormalizeBaseUrl(_baseUrl) + url, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);//
         if (response.IsSuccessStatusCode)
@@ -44,36 +50,14 @@ namespace Atithya_Web.Helpers
         return "API CALL FAILED: " + ex.Message;
       }
     }
-    public async Task<string> GetAsyncExtern(string url)
+    public async Task<string> PostAsync(string url, object input, string? token)
     {
       try
       {
+        // Do something before the action executes.
         EnsureHttpClientCreated();
         _httpClient.DefaultRequestHeaders.Clear();
-
-        HttpResponseMessage response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);//
-        if (response.IsSuccessStatusCode)
-        {                                                                                                                              //response.EnsureSuccessStatusCode();
-          HttpContent strResponseContent = response.Content;
-          return await strResponseContent.ReadAsStringAsync();
-        }
-        else
-        {
-          //LoggingHelper.logEvent(LoggingHelper.LogLevel.DEBUG, "Response Code:: " + response.StatusCode.ToString() + URL::  + NormalizeBaseUrl(_baseUrl) + url + ":: HRMS ID:" + Convert.ToString(HttpContext.Current.Session["PFI"]) == null ? Convert.ToString(HttpContext.Current.Session["ia_hrms"]) : Convert.ToString(HttpContext.Current.Session["PFI"]), true);
-          return default(string);
-        }
-      }
-      catch (Exception ex)
-      {
-        return ex.ToString();
-      }
-    }
-    public async Task<string> PostAsync(string url, object input)
-    {
-      try
-      {
-        EnsureHttpClientCreated();
-        _httpClient.DefaultRequestHeaders.Clear();
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         HttpContent reqContent = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, MediaTypeJson);
         HttpResponseMessage response = await _httpClient.PostAsync(NormalizeBaseUrl(_baseUrl) + url, reqContent).ConfigureAwait(false);

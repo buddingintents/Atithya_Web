@@ -405,7 +405,6 @@ $(function () {
     $('.dataTables_length .form-select').removeClass('form-select-sm');
   }, 300);
 
-  $("#Ankit").text(count);
   dt_user.on('search.dt', function () {
     var count = dt_user.rows({ search: 'applied' }).count();
     console.log(dt_user.page.info());
@@ -416,65 +415,67 @@ $(function () {
 });
 
 // Validation & Phone mask
-(function () {
-  const phoneMaskList = document.querySelectorAll('.phone-mask'),
-    addNewUserForm = document.getElementById('addNewUserForm');
+//(function () {
+//  const phoneMaskList = document.querySelectorAll('.phone-mask'),
+//    addNewUserForm = document.getElementById('addNewUserForm');
 
-  // Phone Number
-  if (phoneMaskList) {
-    phoneMaskList.forEach(function (phoneMask) {
-      new Cleave(phoneMask, {
-        phone: true,
-        phoneRegionCode: 'US'
-      });
-    });
-  }
-  // Add New User Form Validation
-  const fv = FormValidation.formValidation(addNewUserForm, {
-    fields: {
-      userFullname: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter fullname '
-          }
-        }
-      },
-      userEmail: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your email'
-          },
-          emailAddress: {
-            message: 'The value is not a valid email address'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        // Use this for enabling/changing valid/invalid class
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          // field is the field name & ele is the field element
-          return '.mb-4';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      // Submit the form when all fields are valid
-      // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  });
-})();
+//  // Phone Number
+//  if (phoneMaskList) {
+//    phoneMaskList.forEach(function (phoneMask) {
+//      new Cleave(phoneMask, {
+//        phone: true,
+//        phoneRegionCode: 'US'
+//      });
+//    });
+//  }
+//  // Add New User Form Validation
+//  const fv = FormValidation.formValidation(addNewUserForm, {
+//    fields: {
+//      userFullname: {
+//        validators: {
+//          notEmpty: {
+//            message: 'Please enter fullname '
+//          }
+//        }
+//      },
+//      userEmail: {
+//        validators: {
+//          notEmpty: {
+//            message: 'Please enter your email'
+//          },
+//          emailAddress: {
+//            message: 'The value is not a valid email address'
+//          }
+//        }
+//      }
+//    },
+//    plugins: {
+//      trigger: new FormValidation.plugins.Trigger(),
+//      bootstrap5: new FormValidation.plugins.Bootstrap5({
+//        // Use this for enabling/changing valid/invalid class
+//        eleValidClass: '',
+//        rowSelector: function (field, ele) {
+//          // field is the field name & ele is the field element
+//          return '.mb-4';   
+//        }
+//      }),
+//      submitButton: new FormValidation.plugins.SubmitButton(),
+//      // Submit the form when all fields are valid
+//      // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+//      autoFocus: new FormValidation.plugins.AutoFocus()
+//    }
+//  });
+//})();
 
 function a() {
   try {
-    var data = {
-      'Configuration': 'a',
-      'Content': 'a'
-    };
-    Common.Fetch('POST', 'Subscription/GetSubscriptionData', data, prepData);
+    var data = JSON.stringify({
+      'Configuration': getRequestConfig(0, 1, 1, 0),
+      'Content': JSON.stringify({
+        'MIGRATION_DATE': 'Ankit'
+      })
+    });
+    Common.Fetch('POST', 'GetSubscriptionData', data, prepData);
 
     //$.post("Subscription/GetSubscriptionData", data,
     //  function (data, status) {

@@ -1,6 +1,7 @@
 using Atithya_Web.Filters;
 using System.Web;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -11,7 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddMvc(options =>
 {
   //an instant
-  options.Filters.Add(new ValidateSessionCustomActionFilter());
+  options.Filters.Add(new ValidateSessionCustomActionFilter(builder.Configuration));
   //By the type
   options.Filters.Add(typeof(ValidateSessionCustomActionFilter));
 });

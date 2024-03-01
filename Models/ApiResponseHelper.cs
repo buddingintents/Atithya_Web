@@ -1,13 +1,14 @@
 using Atithya_Web.Helpers;
 using Atithya_Web.Utilities;
 using Newtonsoft.Json;
+using NuGet.Common;
 using System.Net;
 
 namespace Atithya_Web.Models
 {
   public class ApiResponseHelper<T>
   {
-    public string GetApiResponse(APIRequest<T> data, string apiPath, string apiMethod)
+    public string GetApiResponse(APIRequest<T> data, string apiPath, string apiMethod, string token)
     {
       var errorResponse = new APIResponse();
       var responseConfig = new ResponseConfig
@@ -21,10 +22,10 @@ namespace Atithya_Web.Models
         switch (apiMethod.ToUpper())
         {
           case "GET":
-            apiResponse = new ApiHelper().GetAsync(apiPath).Result;
+            apiResponse = new ApiHelper(null, token).GetAsync(apiPath, token).Result;
             break;
           case "POST":
-            apiResponse = new ApiHelper().PostAsync(apiPath, data).Result;
+            apiResponse = new ApiHelper(null, token).PostAsync(apiPath, data, token).Result;
             break;
         }
 

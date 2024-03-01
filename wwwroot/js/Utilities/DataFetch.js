@@ -1,7 +1,7 @@
 var Common = {
   Fetch: async function (httpMethod, url, data, successCallBack, perpetualCallBack = null) {
     if (typeof ($body) != 'undefined') {
-      $body.addClass("loading")
+      //$body.addClass("loading")
     }
 
     const fetchedData = await fetch(url, {
@@ -12,8 +12,8 @@ var Common = {
     })
       .then(result => result.json())
       .then(data => successCallBack(data, perpetualCallBack))
-      .catch(error => handleError(error))
-      .finally(() => $body.removeClass("loading"));
+      .catch(error => handleError(error));
+      //.finally(() => $body.removeClass("loading"));
     return fetchedData;
   }
 }
@@ -36,5 +36,5 @@ function handleError(error) {
     window.location.href = "/Home/Index/2";
   }
   else
-    logMessage(error, 'error');
+    console.log(error);
 }
