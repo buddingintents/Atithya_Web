@@ -16,12 +16,9 @@ namespace Atithya_Web.Controllers
     [HttpPost]
     public string GetSubscriptionData(APIRequest<string> data)
     {
-
       if (ModelState.IsValid)
       {
         string? token;
-
-        // Do something before the action executes.
         var cookies = HttpContext.Request.Cookies;
         cookies.TryGetValue("AuthToken", out token);
         return new ApiResponseHelper<string>().GetApiResponse(data, "Subscription/GetSubscriptionData", "POST", new EncryptionHelper(configuration).DecryptData(token));

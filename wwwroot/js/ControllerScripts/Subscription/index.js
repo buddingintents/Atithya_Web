@@ -406,9 +406,9 @@ $(function () {
   }, 300);
 
   dt_user.on('search.dt', function () {
-    var count = dt_user.rows({ search: 'applied' }).count();
+    var count = dt_user.rows({ search: 'applied' }).count().toLocaleString();
     console.log(dt_user.page.info());
-    $("#Ankit").text(count);
+    $("#TotalSubscriptions").text(count);
     console.log(count);
   });
 
